@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clean": "rimraf .next node_modules && npm install"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -24,6 +25,7 @@
     "react-dom": "19.1.0"
   },
   "devDependencies": {
+    "@next/swc-win32-x64-msvc": "^15.5.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
