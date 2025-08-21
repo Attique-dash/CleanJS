@@ -5,9 +5,12 @@ import sendMail from '../../../../lib/utils/sendMail';
 
 export async function POST(request) {
   try {
+    console.log(' Starting registration process...');
     await connectDB();
+    console.log(' Database connected');
     
     const { username, email, password } = await request.json();
+    console.log(' Registration attempt:', { username, email });
 
     if (!username || !email || !password) {
       return NextResponse.json(
@@ -46,6 +49,7 @@ export async function POST(request) {
       );
     }
 
+    console.log(' Creating new user...');
     const newUser = new User({
       username: username.trim(),
       email: email.toLowerCase().trim(),
@@ -53,21 +57,35 @@ export async function POST(request) {
     });
 
     await newUser.save();
+    console.log(' User created successfully');
 
+    // Try to send welcome email
+    let emailStatus = 'Email not attempted';
     try {
-      await sendMail(email, username);
+      console.log(' Attempting to send welcome email...');
+      const emailResult = await sendMail(email, username);
+      
+      if (emailResult.success) {
+        emailStatus = 'Welcome email sent successfully';
+        console.log(' Email sent successfully');
+      } else {
+        emailStatus = `Email failed: ${emailResult.error}`;
+        console.warn(' Email failed:', emailResult.error);
+      }
     } catch (emailError) {
-      console.error('Email failed but user created:', emailError);
+      emailStatus = `Email error: ${emailError.message}`;
+      console.error(' Email error:', emailError);
     }
 
     return NextResponse.json({
       success: true,
-      message: 'User registered successfully! Welcome email sent.',
+      message: 'User registered successfully!',
+      emailStatus: emailStatus,
       user: newUser
     }, { status: 201 });
 
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error(' Registration error:', error);
     
     if (error.code === 11000) {
       return NextResponse.json(
@@ -85,7 +103,11 @@ export async function POST(request) {
     }
 
     return NextResponse.json(
-      { success: false, message: 'Registration failed. Please try again.' },
+      { 
+        success: false, 
+        message: 'Registration failed. Please try again.',
+        error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      },
       { status: 500 }
     );
   }
