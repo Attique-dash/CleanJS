@@ -9,7 +9,6 @@ export async function POST(request) {
     
     const { username, email, password } = await request.json();
 
-    // Validation
     if (!username || !email || !password) {
       return NextResponse.json(
         { 
@@ -20,7 +19,6 @@ export async function POST(request) {
       );
     }
 
-    // Email validation
     const emailRegex = /^\S+@\S+\.\S+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
@@ -29,7 +27,6 @@ export async function POST(request) {
       );
     }
 
-    // Password validation
     if (password.length < 6) {
       return NextResponse.json(
         { success: false, message: 'Password must be at least 6 characters' },
@@ -37,7 +34,6 @@ export async function POST(request) {
       );
     }
 
-    // Check if user exists
     const existingUser = await User.findOne({ 
       $or: [{ email: email.toLowerCase() }, { username }] 
     });
@@ -50,7 +46,6 @@ export async function POST(request) {
       );
     }
 
-    // Create new user
     const newUser = new User({
       username: username.trim(),
       email: email.toLowerCase().trim(),
@@ -59,7 +54,6 @@ export async function POST(request) {
 
     await newUser.save();
 
-    // Send welcome email
     try {
       await sendMail(email, username);
     } catch (emailError) {
