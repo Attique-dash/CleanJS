@@ -7,9 +7,9 @@ export async function GET(request) {
   try {
     await connectDB();
     
-    // Extract API token from query parameters
+    // Extract API token from query parameters (Tasoko expects APITOKEN)
     const { searchParams } = new URL(request.url);
-    const apiToken = searchParams.get('id') || searchParams.get('apiToken');
+    const apiToken = searchParams.get('APITOKEN') || searchParams.get('apiToken') || searchParams.get('id');
     
     console.log('🔍 Tasoko customers request with token:', apiToken?.substring(0, 10) + '...');
     
@@ -40,16 +40,12 @@ export async function GET(request) {
     
     console.log(`📦 Found ${customers.length} active customers for Tasoko`);
     
-    // Format response according to Tasoko API requirements
+    // Format response as a JSON array of customer objects with required fields
     const formattedCustomers = customers.map(customer => ({
       UserCode: customer.userCode,
       FirstName: customer.firstName,
       LastName: customer.lastName,
-      Branch: customer.branch,
-      CustomerServiceTypeID: customer.customerServiceTypeID || "",
-      CustomerLevelInstructions: customer.customerLevelInstructions || "",
-      CourierServiceTypeID: customer.courierServiceTypeID || "",
-      CourierLevelInstructions: customer.courierLevelInstructions || ""
+      Branch: customer.branch
     }));
     
     return NextResponse.json(formattedCustomers, { 
