@@ -1,0 +1,111 @@
+{
+    "statuses": {
+      "0": {
+        "id": 0,
+        "name": "AT WAREHOUSE",
+        "description": "Package has been received and is currently at the warehouse",
+        "color": "#3B82F6",
+        "icon": "warehouse",
+        "isActive": true,
+        "nextStatuses": [1]
+      },
+      "1": {
+        "id": 1,
+        "name": "DELIVERED TO AIRPORT",
+        "description": "Package has been delivered to the airport for shipping",
+        "color": "#8B5CF6",
+        "icon": "plane",
+        "isActive": true,
+        "nextStatuses": [2]
+      },
+      "2": {
+        "id": 2,
+        "name": "IN TRANSIT TO LOCAL PORT",
+        "description": "Package is currently in transit to the local port",
+        "color": "#F59E0B",
+        "icon": "truck",
+        "isActive": true,
+        "nextStatuses": [3]
+      },
+      "3": {
+        "id": 3,
+        "name": "AT LOCAL PORT",
+        "description": "Package has arrived at the local port",
+        "color": "#10B981",
+        "icon": "anchor",
+        "isActive": true,
+        "nextStatuses": [4]
+      },
+      "4": {
+        "id": 4,
+        "name": "AT LOCAL SORTING",
+        "description": "Package is at the local sorting facility ready for delivery",
+        "color": "#059669",
+        "icon": "check-circle",
+        "isActive": true,
+        "nextStatuses": []
+      }
+    },
+    "transitions": [
+      {
+        "from": 0,
+        "to": 1,
+        "name": "Ship to Airport",
+        "requiresLocation": true,
+        "requiresNotes": false
+      },
+      {
+        "from": 1,
+        "to": 2,
+        "name": "Dispatch to Port",
+        "requiresLocation": true,
+        "requiresNotes": false
+      },
+      {
+        "from": 2,
+        "to": 3,
+        "name": "Arrive at Port",
+        "requiresLocation": true,
+        "requiresNotes": false
+      },
+      {
+        "from": 3,
+        "to": 4,
+        "name": "Ready for Delivery",
+        "requiresLocation": true,
+        "requiresNotes": false
+      }
+    ],
+    "manifestStatuses": {
+      "0": {
+        "id": "0",
+        "name": "AT WAREHOUSE",
+        "description": "Manifest is at the warehouse",
+        "color": "#3B82F6"
+      },
+      "1": {
+        "id": "1",
+        "name": "DELIVERED TO AIRPORT",
+        "description": "Manifest has been delivered to airport",
+        "color": "#8B5CF6"
+      },
+      "2": {
+        "id": "2",
+        "name": "IN TRANSIT TO LOCAL PORT",
+        "description": "Manifest is in transit to local port",
+        "color": "#F59E0B"
+      },
+      "3": {
+        "id": "3",
+        "name": "AT LOCAL PORT",
+        "description": "Manifest is at local port",
+        "color": "#10B981"
+      },
+      "4": {
+        "id": "4",
+        "name": "AT LOCAL SORTING",
+        "description": "Manifest is at local sorting facility",
+        "color": "#059669"
+      }
+    }
+  }

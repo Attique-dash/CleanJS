@@ -1,0 +1,47 @@
+[
+    {
+      "id": "59cadcd4-7508-450b-85aa-9ec908d168fe",
+      "name": "AIR STANDARD",
+      "code": "AS",
+      "type": "air",
+      "priority": "standard",
+      "estimatedDays": "5-7",
+      "description": "Standard air shipping service with regular delivery times"
+    },
+    {
+      "id": "25a1d8e5-a478-4cc3-b1fd-a37d0d787302",
+      "name": "AIR EXPRESS",
+      "code": "AE",
+      "type": "air",
+      "priority": "express",
+      "estimatedDays": "2-3",
+      "description": "Fast air shipping service for urgent deliveries"
+    },
+    {
+      "id": "8df142ca-0573-4ce9-b11d-7a3e5f8ba196",
+      "name": "AIR PREMIUM",
+      "code": "AP",
+      "type": "air",
+      "priority": "premium",
+      "estimatedDays": "1-2",
+      "description": "Premium air shipping service with fastest delivery"
+    },
+    {
+      "id": "7c9638e8-4bb3-499e-8af9-d09f757a099e",
+      "name": "SEA STANDARD",
+      "code": "SS",
+      "type": "sea",
+      "priority": "standard",
+      "estimatedDays": "21-30",
+      "description": "Standard sea shipping service for cost-effective delivery"
+    },
+    {
+      "id": "",
+      "name": "UNSPECIFIED",
+      "code": "UN",
+      "type": "unspecified",
+      "priority": "unspecified",
+      "estimatedDays": "varies",
+      "description": "Service type not specified"
+    }
+  ]
