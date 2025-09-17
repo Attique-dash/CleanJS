@@ -150,7 +150,7 @@ export default function CustomerDetailsPage() {
             <h1 className="text-2xl font-bold text-gray-900">
               {customer.firstName} {customer.lastName}
             </h1>
-            <Badge variant={customer.isActive ? 'success' : 'error'}>
+            <Badge variant={customer.isActive ? 'success' : 'warning'}>
               {customer.isActive ? 'Active' : 'Inactive'}
             </Badge>
           </div>

@@ -270,7 +270,7 @@ export default function CustomersPage() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <Badge variant={customer.isActive ? 'success' : 'error'}>
+                    <Badge variant={customer.isActive ? 'success' : 'warning'}>
                       {customer.isActive ? 'Active' : 'Inactive'}
                     </Badge>
                   </td>
