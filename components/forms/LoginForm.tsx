@@ -37,11 +37,11 @@ export default function LoginForm() {
       {error && <Notification type="error" message={error} />}
       <div>
         <label className="block text-sm text-gray-600 mb-1">Email</label>
-        <Input type="email" value={email} onChange={(e: any) => setEmail(e.target.value)} required />
+        <Input type="email" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} required />
       </div>
       <div>
         <label className="block text-sm text-gray-600 mb-1">Password</label>
-        <Input type="password" value={password} onChange={(e: any) => setPassword(e.target.value)} required />
+        <Input type="password" value={password} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} required />
       </div>
       <Button type="submit" disabled={loading}>{loading ? 'Signing in...' : 'Sign In'}</Button>
     </form>
