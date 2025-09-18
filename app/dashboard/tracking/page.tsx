@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import Input from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import Badge from '@/components/ui/badge';
 import { Search, Package, User, MapPin, Calendar, Weight, Truck, FileText, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 

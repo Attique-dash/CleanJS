@@ -2,9 +2,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Card from '../ui/Card'
+import { Card, CardHeader, CardContent, CardTitle } from '../ui/card'
 import LoadingSpinner from '../ui/LoadingSpinner'
-import Badge from '../ui/Badge'
+import Badge from '../ui/badge'
 
 interface DashboardData {
   overview: {

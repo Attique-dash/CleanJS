@@ -21,7 +21,7 @@ export async function GET(request, { params }) {
     console.log(`📦 Fetching package details: ${id}`);
     
     // Find package by ID, tracking number, or control number
-    const package = await Package.findOne({
+    const pkg = await Package.findOne({
       $or: [
         { _id: id },
         { trackingNumber: id },
@@ -30,7 +30,7 @@ export async function GET(request, { params }) {
       ]
     }).populate('customerRef', 'userCode firstName lastName email phone address branch');
     
-    if (!package) {
+    if (!pkg) {
       return NextResponse.json(
         { success: false, message: 'Package not found' },
         { status: 404 }
@@ -39,65 +39,65 @@ export async function GET(request, { params }) {
     
     // Get manifest information if available
     let manifestInfo = null;
-    if (package.manifestID) {
-      manifestInfo = await Manifest.findOne({ manifestID: package.manifestID })
+    if (pkg.manifestID) {
+      manifestInfo = await Manifest.findOne({ manifestID: pkg.manifestID })
         .select('manifestCode flightDate awbNumber serviceTypeID manifestStatus staffName');
     }
     
     // Format package details
     const packageDetails = {
       // Basic Package Information
-      _id: package._id,
-      packageID: package.packageID,
-      trackingNumber: package.trackingNumber,
-      controlNumber: package.controlNumber,
+      _id: pkg._id,
+      packageID: pkg.packageID,
+      trackingNumber: pkg.trackingNumber,
+      controlNumber: pkg.controlNumber,
       
       // Customer Information
       customer: {
-        _id: package.customerRef?._id,
-        userCode: package.userCode,
-        firstName: package.firstName,
-        lastName: package.lastName,
-        fullName: `${package.firstName} ${package.lastName}`,
-        email: package.customerRef?.email,
-        phone: package.customerRef?.phone,
-        address: package.customerRef?.address
+        _id: pkg.customerRef?._id,
+        userCode: pkg.userCode,
+        firstName: pkg.firstName,
+        lastName: pkg.lastName,
+        fullName: `${pkg.firstName} ${pkg.lastName}`,
+        email: pkg.customerRef?.email,
+        phone: pkg.customerRef?.phone,
+        address: pkg.customerRef?.address
       },
       
       // Package Details
-      weight: package.weight,
-      dimensions: package.dimensions,
-      pieces: package.pieces,
-      description: package.description,
-      shipper: package.shipper,
-      branch: package.branch,
-      hsCode: package.hsCode,
+      weight: pkg.weight,
+      dimensions: pkg.dimensions,
+      pieces: pkg.pieces,
+      description: pkg.description,
+      shipper: pkg.shipper,
+      branch: pkg.branch,
+      hsCode: pkg.hsCode,
       
       // Status Information
-      packageStatus: package.packageStatus,
-      statusName: package.statusName,
-      claimed: package.claimed,
-      unknown: package.unknown,
-      discrepancy: package.discrepancy,
-      discrepancyDescription: package.discrepancyDescription,
+      packageStatus: pkg.packageStatus,
+      statusName: pkg.statusName,
+      claimed: pkg.claimed,
+      unknown: pkg.unknown,
+      discrepancy: pkg.discrepancy,
+      discrepancyDescription: pkg.discrepancyDescription,
       
       // Service Information
-      serviceTypeID: package.serviceTypeID,
-      serviceTypeName: package.serviceTypeName,
-      hazmatCodeID: package.hazmatCodeID,
-      hazmatName: package.hazmatName,
-      coloaded: package.coloaded,
-      coloadIndicator: package.coloadIndicator,
+      serviceTypeID: pkg.serviceTypeID,
+      serviceTypeName: pkg.serviceTypeName,
+      hazmatCodeID: pkg.hazmatCodeID,
+      hazmatName: pkg.hazmatName,
+      coloaded: pkg.coloaded,
+      coloadIndicator: pkg.coloadIndicator,
       
       // Dates and Entry
-      entryDate: package.entryDate,
-      entryDateTime: package.entryDateTime,
-      entryStaff: package.entryStaff,
-      createdAt: package.createdAt,
-      updatedAt: package.updatedAt,
+      entryDate: pkg.entryDate,
+      entryDateTime: pkg.entryDateTime,
+      entryStaff: pkg.entryStaff,
+      createdAt: pkg.createdAt,
+      updatedAt: pkg.updatedAt,
       
       // Status History
-      statusHistory: package.statusHistory.map(history => ({
+      statusHistory: pkg.statusHistory.map(history => ({
         status: history.status,
         statusName: getStatusName(history.status),
         timestamp: history.timestamp,
@@ -108,7 +108,7 @@ export async function GET(request, { params }) {
       
       // Manifest Information
       manifest: manifestInfo ? {
-        manifestID: package.manifestID,
+        manifestID: pkg.manifestID,
         manifestCode: manifestInfo.manifestCode,
         flightDate: manifestInfo.flightDate,
         awbNumber: manifestInfo.awbNumber,
@@ -118,22 +118,22 @@ export async function GET(request, { params }) {
       } : null,
       
       // Additional Fields
-      courierID: package.courierID,
-      collectionID: package.collectionID,
-      apiToken: package.apiToken ? '***masked***' : null,
-      showControls: package.showControls,
-      aiProcessed: package.aiProcessed,
-      originalHouseNumber: package.originalHouseNumber,
-      packagePayments: package.packagePayments,
+      courierID: pkg.courierID,
+      collectionID: pkg.collectionID,
+      apiToken: pkg.apiToken ? '***masked***' : null,
+      showControls: pkg.showControls,
+      aiProcessed: pkg.aiProcessed,
+      originalHouseNumber: pkg.originalHouseNumber,
+      packagePayments: pkg.packagePayments,
       
       // Calculated Fields
-      daysInSystem: Math.floor((new Date() - package.entryDateTime) / (1000 * 60 * 60 * 24)),
-      isDelivered: package.packageStatus === 4,
-      isInTransit: package.packageStatus > 0 && package.packageStatus < 4,
-      lastStatusUpdate: package.statusHistory.length > 0 ? package.statusHistory[package.statusHistory.length - 1].timestamp : package.updatedAt
+      daysInSystem: Math.floor((new Date() - pkg.entryDateTime) / (1000 * 60 * 60 * 24)),
+      isDelivered: pkg.packageStatus === 4,
+      isInTransit: pkg.packageStatus > 0 && pkg.packageStatus < 4,
+      lastStatusUpdate: pkg.statusHistory.length > 0 ? pkg.statusHistory[pkg.statusHistory.length - 1].timestamp : pkg.updatedAt
     };
     
-    console.log(`✅ Package details retrieved: ${package.trackingNumber}`);
+    console.log(`✅ Package details retrieved: ${pkg.trackingNumber}`);
     
     return NextResponse.json({
       success: true,
@@ -171,7 +171,7 @@ export async function PUT(request, { params }) {
     console.log(`🔄 Updating package: ${id}`, updateData);
     
     // Find package
-    const package = await Package.findOne({
+    const pkg = await Package.findOne({
       $or: [
         { _id: id },
         { trackingNumber: id },
@@ -180,7 +180,7 @@ export async function PUT(request, { params }) {
       ]
     });
     
-    if (!package) {
+    if (!pkg) {
       return NextResponse.json(
         { success: false, message: 'Package not found' },
         { status: 404 }
@@ -188,59 +188,59 @@ export async function PUT(request, { params }) {
     }
     
     // Store old values for history tracking
-    const oldStatus = package.packageStatus;
-    const oldWeight = package.weight;
-    const oldBranch = package.branch;
+    const oldStatus = pkg.packageStatus;
+    const oldWeight = pkg.weight;
+    const oldBranch = pkg.branch;
     
     // Update package fields
-    if (updateData.weight !== undefined) package.weight = updateData.weight;
-    if (updateData.pieces !== undefined) package.pieces = updateData.pieces;
-    if (updateData.description !== undefined) package.description = updateData.description.trim();
-    if (updateData.shipper !== undefined) package.shipper = updateData.shipper.trim();
-    if (updateData.branch !== undefined) package.branch = updateData.branch.trim();
-    if (updateData.hsCode !== undefined) package.hsCode = updateData.hsCode.trim();
-    if (updateData.serviceTypeID !== undefined) package.serviceTypeID = updateData.serviceTypeID;
-    if (updateData.hazmatCodeID !== undefined) package.hazmatCodeID = updateData.hazmatCodeID;
-    if (updateData.claimed !== undefined) package.claimed = updateData.claimed;
-    if (updateData.discrepancy !== undefined) package.discrepancy = updateData.discrepancy;
-    if (updateData.discrepancyDescription !== undefined) package.discrepancyDescription = updateData.discrepancyDescription;
-    if (updateData.coloaded !== undefined) package.coloaded = updateData.coloaded;
-    if (updateData.coloadIndicator !== undefined) package.coloadIndicator = updateData.coloadIndicator;
-    if (updateData.packagePayments !== undefined) package.packagePayments = updateData.packagePayments;
-    if (updateData.originalHouseNumber !== undefined) package.originalHouseNumber = updateData.originalHouseNumber;
+    if (updateData.weight !== undefined) pkg.weight = updateData.weight;
+    if (updateData.pieces !== undefined) pkg.pieces = updateData.pieces;
+    if (updateData.description !== undefined) pkg.description = updateData.description.trim();
+    if (updateData.shipper !== undefined) pkg.shipper = updateData.shipper.trim();
+    if (updateData.branch !== undefined) pkg.branch = updateData.branch.trim();
+    if (updateData.hsCode !== undefined) pkg.hsCode = updateData.hsCode.trim();
+    if (updateData.serviceTypeID !== undefined) pkg.serviceTypeID = updateData.serviceTypeID;
+    if (updateData.hazmatCodeID !== undefined) pkg.hazmatCodeID = updateData.hazmatCodeID;
+    if (updateData.claimed !== undefined) pkg.claimed = updateData.claimed;
+    if (updateData.discrepancy !== undefined) pkg.discrepancy = updateData.discrepancy;
+    if (updateData.discrepancyDescription !== undefined) pkg.discrepancyDescription = updateData.discrepancyDescription;
+    if (updateData.coloaded !== undefined) pkg.coloaded = updateData.coloaded;
+    if (updateData.coloadIndicator !== undefined) pkg.coloadIndicator = updateData.coloadIndicator;
+    if (updateData.packagePayments !== undefined) pkg.packagePayments = updateData.packagePayments;
+    if (updateData.originalHouseNumber !== undefined) pkg.originalHouseNumber = updateData.originalHouseNumber;
     
     // Update dimensions
     if (updateData.dimensions) {
-      package.dimensions = {
-        cubes: updateData.dimensions.cubes ?? package.dimensions.cubes,
-        length: updateData.dimensions.length ?? package.dimensions.length,
-        width: updateData.dimensions.width ?? package.dimensions.width,
-        height: updateData.dimensions.height ?? package.dimensions.height
+      pkg.dimensions = {
+        cubes: updateData.dimensions.cubes ?? pkg.dimensions.cubes,
+        length: updateData.dimensions.length ?? pkg.dimensions.length,
+        width: updateData.dimensions.width ?? pkg.dimensions.width,
+        height: updateData.dimensions.height ?? pkg.dimensions.height
       };
     }
     
     // Update customer information
-    if (updateData.firstName !== undefined) package.firstName = updateData.firstName.trim();
-    if (updateData.lastName !== undefined) package.lastName = updateData.lastName.trim();
+    if (updateData.firstName !== undefined) pkg.firstName = updateData.firstName.trim();
+    if (updateData.lastName !== undefined) pkg.lastName = updateData.lastName.trim();
     if (updateData.userCode !== undefined) {
-      package.userCode = updateData.userCode.trim().toUpperCase();
+      pkg.userCode = updateData.userCode.trim().toUpperCase();
       
       // Find and link new customer
-      const customer = await Customer.findOne({ userCode: package.userCode });
+      const customer = await Customer.findOne({ userCode: pkg.userCode });
       if (customer) {
-        package.customerRef = customer._id;
-        package.unknown = false;
+        pkg.customerRef = customer._id;
+        pkg.unknown = false;
       } else {
-        package.unknown = true;
-        console.warn(`⚠️ Customer not found for UserCode: ${package.userCode}`);
+        pkg.unknown = true;
+        console.warn(`⚠️ Customer not found for UserCode: ${pkg.userCode}`);
       }
     }
     
     // Handle status update with history
     if (updateData.packageStatus !== undefined && updateData.packageStatus !== oldStatus) {
-      package.updateStatus(
+      pkg.updateStatus(
         updateData.packageStatus,
-        updateData.location || package.branch,
+        updateData.location || pkg.branch,
         updateData.statusNotes || `Status updated to ${getStatusName(updateData.packageStatus)}`,
         updateData.updatedBy || 'Admin'
       );
@@ -256,33 +256,33 @@ export async function PUT(request, { params }) {
     }
     
     if (significantChanges.length > 0) {
-      package.statusHistory.push({
-        status: package.packageStatus,
+      pkg.statusHistory.push({
+        status: pkg.packageStatus,
         timestamp: new Date(),
-        location: package.branch,
+        location: pkg.branch,
         notes: `Package updated: ${significantChanges.join(', ')}`,
         updatedBy: updateData.updatedBy || 'Admin'
       });
     }
     
-    package.updatedAt = new Date();
-    await package.save();
+    pkg.updatedAt = new Date();
+    await pkg.save();
     
     // Update customer package statistics if customer changed
-    if (updateData.userCode !== undefined && package.customerRef) {
-      const customer = await Customer.findById(package.customerRef);
+    if (updateData.userCode !== undefined && pkg.customerRef) {
+      const customer = await Customer.findById(pkg.customerRef);
       if (customer) {
         await customer.updatePackageStats();
         await customer.save();
       }
     }
     
-    console.log(`✅ Package updated: ${package.trackingNumber}`);
+    console.log(`✅ Package updated: ${pkg.trackingNumber}`);
     
     return NextResponse.json({
       success: true,
       message: 'Package updated successfully',
-      data: package.toTasokoFormat(),
+      data: pkg.toTasokoFormat(),
       changes: significantChanges
     }, { status: 200 });
 
@@ -325,7 +325,7 @@ export async function DELETE(request, { params }) {
     console.log(`🗑️ Deleting package: ${id}`);
     
     // Find package
-    const package = await Package.findOne({
+    const pkgToDelete = await Package.findOne({
       $or: [
         { _id: id },
         { trackingNumber: id },
@@ -334,7 +334,7 @@ export async function DELETE(request, { params }) {
       ]
     });
     
-    if (!package) {
+    if (!pkgToDelete) {
       return NextResponse.json(
         { success: false, message: 'Package not found' },
         { status: 404 }
@@ -342,7 +342,7 @@ export async function DELETE(request, { params }) {
     }
     
     // Check if package can be deleted (business rules)
-    if (package.packageStatus === 4 && package.claimed) {
+    if (pkgToDelete.packageStatus === 4 && pkgToDelete.claimed) {
       return NextResponse.json(
         { 
           success: false, 
@@ -354,13 +354,13 @@ export async function DELETE(request, { params }) {
     
     // Store package data for response and customer update
     const packageData = {
-      trackingNumber: package.trackingNumber,
-      controlNumber: package.controlNumber,
-      customerRef: package.customerRef
+      trackingNumber: pkgToDelete.trackingNumber,
+      controlNumber: pkgToDelete.controlNumber,
+      customerRef: pkgToDelete.customerRef
     };
     
     // Delete package
-    await Package.findByIdAndDelete(package._id);
+    await Package.findByIdAndDelete(pkgToDelete._id);
     
     // Update customer package statistics
     if (packageData.customerRef) {

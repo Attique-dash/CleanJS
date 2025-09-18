@@ -4,8 +4,8 @@
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
-import DashboardNav from '@/components/dashboard/DashboardNav';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
+import DashboardNav from '@/components/layout/Navbar';
+import DashboardSidebar from '@/components/layout/Sidebar';
 
 const inter = Inter({ subsets: ['latin'] });
 

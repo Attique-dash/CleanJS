@@ -1,8 +1,8 @@
 // components/packages/PackageCard.tsx
 'use client'
 
-import Card from '../ui/Card'
-import Badge from '../ui/Badge'
+import { Card } from '../ui/card'
+import Badge from '../ui/badge'
 
 type Props = {
   trackingNumber: string

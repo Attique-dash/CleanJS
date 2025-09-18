@@ -1,7 +1,7 @@
 // components/packages/PackageStatus.tsx
 'use client'
 
-import Badge from '../ui/Badge'
+import Badge from '../ui/badge'
 
 type Props = {
   status: number

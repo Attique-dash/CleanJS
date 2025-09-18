@@ -1,35 +1,47 @@
-// components/ui/Button.tsx
+// components/ui/button.tsx
 'use client'
 
 import React from 'react'
 
-type Variant = 'primary' | 'secondary' | 'danger'
-type Size = 'sm' | 'md' | 'lg'
+type Variant = 'default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'destructive'
+type Size = 'default' | 'sm' | 'lg' | 'icon'
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant
   size?: Size
 }
 
 const variantClasses: Record<Variant, string> = {
-  primary: 'bg-blue-600 hover:bg-blue-700 text-white',
+  default: 'bg-blue-600 hover:bg-blue-700 text-white',
+  outline: 'border border-gray-300 bg-white hover:bg-gray-50 text-gray-900',
   secondary: 'bg-gray-100 hover:bg-gray-200 text-gray-900',
-  danger: 'bg-red-600 hover:bg-red-700 text-white'
+  ghost: 'hover:bg-gray-100 text-gray-900',
+  link: 'text-blue-600 hover:text-blue-700 underline',
+  destructive: 'bg-red-600 hover:bg-red-700 text-white'
 }
 
 const sizeClasses: Record<Size, string> = {
-  sm: 'px-2 py-1 text-xs rounded',
-  md: 'px-4 py-2 text-sm rounded-md',
-  lg: 'px-6 py-3 text-base rounded-lg'
+  default: 'px-4 py-2 text-sm',
+  sm: 'px-3 py-1.5 text-xs',
+  lg: 'px-6 py-3 text-base',
+  icon: 'p-2'
 }
 
-export default function Button({ variant = 'primary', size = 'md', className = '', ...props }: Props) {
+export function Button({ 
+  variant = 'default', 
+  size = 'default', 
+  className = '', 
+  ...props 
+}: ButtonProps) {
   return (
     <button
-      className={`${variantClasses[variant]} ${sizeClasses[size]} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-60 disabled:cursor-not-allowed ${className}`}
+      className={`
+        inline-flex items-center justify-center rounded-md font-medium 
+        transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 
+        focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none
+        ${variantClasses[variant]} ${sizeClasses[size]} ${className}
+      `}
       {...props}
     />
   )
 }
-
-
