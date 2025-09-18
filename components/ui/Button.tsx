@@ -1,4 +1,4 @@
-// components/ui/button.tsx
+// components/ui/Button.tsx
 'use client'
 
 import React from 'react'
@@ -27,7 +27,7 @@ const sizeClasses: Record<Size, string> = {
   icon: 'p-2'
 }
 
-export function Button({ 
+export default function Button({ 
   variant = 'default', 
   size = 'default', 
   className = '', 
@@ -45,3 +45,6 @@ export function Button({
     />
   )
 }
+
+// Named export for backward compatibility
+export { Button }

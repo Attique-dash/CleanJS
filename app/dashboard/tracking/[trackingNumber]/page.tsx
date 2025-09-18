@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 import Badge from '@/components/ui/badge';
 import { ArrowLeft, Package, User, MapPin, Calendar, Weight, Truck, FileText, AlertCircle, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -242,7 +242,7 @@ export default function TrackingDetailPage() {
                 trackingData.package.currentStatus.status,
                 trackingData.summary.isDelivered,
                 trackingData.summary.isClaimed
-              )} size="lg">
+              )} size='lg'>
                 {trackingData.package.currentStatus.statusName}
               </Badge>
               {trackingData.summary.isClaimed && (

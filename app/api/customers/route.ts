@@ -12,13 +12,15 @@ export async function GET(request: NextRequest) {
     const branch = searchParams.get('branch');
     const status = searchParams.get('status');
     const search = searchParams.get('search');
-    const limit = parseInt(searchParams.get('limit')) || 50;
-    const skip = parseInt(searchParams.get('skip')) || 0;
+    const limitParam = searchParams.get('limit');
+    const skipParam = searchParams.get('skip');
+    const limit = Number.parseInt(limitParam ?? '') || 50;
+    const skip = Number.parseInt(skipParam ?? '') || 0;
     
     console.log('📋 Fetching customers with filters:', { branch, status, search, limit, skip });
     
     // Build query
-    let query = {};
+    const query: Record<string, any> = {};
     
     if (branch) {
       query.branch = branch;
@@ -80,11 +82,12 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('❌ Customers fetch error:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
       { 
         success: false, 
         message: 'Failed to fetch customers',
-        error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+        error: process.env.NODE_ENV === 'development' ? message : 'Internal server error'
       },
       { status: 500 }
     );
@@ -155,27 +158,30 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('❌ Customer creation error:', error);
+    const err: any = error;
     
-    if (error.code === 11000) {
+    if (err && typeof err === 'object' && err.code === 11000) {
       return NextResponse.json(
         { success: false, message: 'Customer with this information already exists' },
         { status: 400 }
       );
     }
     
-    if (error.name === 'ValidationError') {
-      const message = Object.values(error.errors)[0].message;
+    if (err && typeof err === 'object' && err.name === 'ValidationError') {
+      const firstError = err.errors ? Object.values(err.errors)[0] as any : null;
+      const message = firstError?.message || 'Validation error';
       return NextResponse.json(
         { success: false, message },
         { status: 400 }
       );
     }
     
+    const message = err instanceof Error ? err.message : 'Internal server error';
     return NextResponse.json(
       { 
         success: false, 
         message: 'Failed to create customer',
-        error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+        error: process.env.NODE_ENV === 'development' ? message : 'Internal server error'
       },
       { status: 500 }
     );
@@ -261,11 +267,12 @@ export async function PUT(request: NextRequest) {
 
   } catch (error) {
     console.error('❌ Bulk customer operation error:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
       { 
         success: false, 
         message: 'Failed to perform bulk operation',
-        error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+        error: process.env.NODE_ENV === 'development' ? message : 'Internal server error'
       },
       { status: 500 }
     );
@@ -318,11 +325,12 @@ export async function DELETE(request: NextRequest) {
 
   } catch (error) {
     console.error('❌ Customer deletion error:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
       { 
         success: false, 
         message: 'Failed to delete customers',
-        error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+        error: process.env.NODE_ENV === 'development' ? message : 'Internal server error'
       },
       { status: 500 }
     );

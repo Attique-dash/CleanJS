@@ -3,7 +3,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Card from '../ui/Card'
-import Input from '../ui/Input'
+import Input from '../ui/input'
 import Button from '../ui/Button'
 import Table from '../ui/Table'
 import Modal from '../ui/Modal'

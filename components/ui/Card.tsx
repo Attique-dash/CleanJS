@@ -1,4 +1,4 @@
-// components/ui/card.tsx
+// components/ui/Card.tsx
 'use client'
 
 import React from 'react'
@@ -23,7 +23,7 @@ interface CardContentProps {
   className?: string
 }
 
-export function Card({ children, className = '' }: CardProps) {
+const Card = ({ children, className = '' }: CardProps) => {
   return (
     <div className={`bg-white rounded-lg border border-gray-200 shadow-sm ${className}`}>
       {children}
@@ -31,7 +31,7 @@ export function Card({ children, className = '' }: CardProps) {
   )
 }
 
-export function CardHeader({ children, className = '' }: CardHeaderProps) {
+const CardHeader = ({ children, className = '' }: CardHeaderProps) => {
   return (
     <div className={`px-6 py-4 border-b border-gray-200 ${className}`}>
       {children}
@@ -39,7 +39,7 @@ export function CardHeader({ children, className = '' }: CardHeaderProps) {
   )
 }
 
-export function CardTitle({ children, className = '' }: CardTitleProps) {
+const CardTitle = ({ children, className = '' }: CardTitleProps) => {
   return (
     <h3 className={`text-lg font-semibold text-gray-900 ${className}`}>
       {children}
@@ -47,10 +47,13 @@ export function CardTitle({ children, className = '' }: CardTitleProps) {
   )
 }
 
-export function CardContent({ children, className = '' }: CardContentProps) {
+const CardContent = ({ children, className = '' }: CardContentProps) => {
   return (
     <div className={`px-6 py-4 ${className}`}>
       {children}
     </div>
   )
 }
+
+export default Card
+export { Card, CardHeader, CardTitle, CardContent }

@@ -4,8 +4,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useParams } from 'next/navigation'
-import { Card } from '../../../../components/ui/card'
-import { Button } from '../../../../components/ui/button'
+import { Card } from '../../../../components/ui/Card'
+import { Button } from '../../../../components/ui/Button'
 import LoadingSpinner from '../../../../components/ui/LoadingSpinner'
 import Badge from '../../../../components/ui/badge'
 

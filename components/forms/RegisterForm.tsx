@@ -2,7 +2,7 @@
 'use client'
 
 import { useState } from 'react'
-import Input from '../ui/Input'
+import Input from '../ui/input'
 import Button from '../ui/Button'
 import Notification from '../ui/Notification'
 

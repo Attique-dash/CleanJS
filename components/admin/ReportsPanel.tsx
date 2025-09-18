@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Card from '../ui/Card'
 import LoadingSpinner from '../ui/LoadingSpinner'
 import Button from '../ui/Button'
-import Input from '../ui/Input'
+import Input from '../ui/input'
 
 interface ReportSummary {
   totalPackages: number

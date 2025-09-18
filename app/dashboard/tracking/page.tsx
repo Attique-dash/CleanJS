@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import Input from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import Badge from '@/components/ui/badge';
 import { Search, Package, User, MapPin, Calendar, Weight, Truck, FileText, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -215,7 +215,7 @@ export default function TrackingPage() {
                         {trackingData.package.currentStatus.statusName}
                       </Badge>
                       {trackingData.summary.isClaimed && (
-                        <Badge variant="outline" className="ml-2">Claimed</Badge>
+                        <Badge variant='outline' className="ml-2">Claimed</Badge>
                       )}
                     </div>
                   </div>

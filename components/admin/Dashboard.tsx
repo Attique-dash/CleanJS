@@ -2,7 +2,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardHeader, CardContent, CardTitle } from '../ui/card'
+import { Card, CardHeader, CardContent, CardTitle } from '../ui/Card'
 import LoadingSpinner from '../ui/LoadingSpinner'
 import Badge from '../ui/badge'
 
